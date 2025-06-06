@@ -65,6 +65,18 @@ namespace TPFinal_Programacion.Controllers
             await _context.SaveChangesAsync();
             return NoContent();
         }
+        [HttpPut("{id}")]
+        public async Task<ActionResult> Put(int id, Cliente cliente)
+        {
+            if (id != cliente.Id)
+            {
+                return BadRequest();
+            }
+            _context.Entry(cliente).State= EntityState.Modified;
+            await _context.SaveChangesAsync();
+
+            return NoContent();
+        }
         
     }
 }
