@@ -6,9 +6,10 @@ namespace TPFinal_Programacion.Models
     {
         [Key]
         public int Id { get; set; }
-        [Required(ErrorMessage = "ERROR - Ingrese un nombre")]
+        [Required(ErrorMessage = "ERROR - Ingrese un nombre válido")]
         public string Nombre { get; set; }
-        [Required(ErrorMessage = "ERROR - Ingrese un email")]
+        [Required(ErrorMessage = "ERROR - Ingrese un email válido")]
+        [EmailAddress(ErrorMessage = "ERROR - El formato del email es inválido")]
         public string Email { get; set; }
     }
 }

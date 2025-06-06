@@ -1,5 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using System;
+using TPFinal_Programacion.Models;
 
 var builder = WebApplication.CreateBuilder(args);
 
