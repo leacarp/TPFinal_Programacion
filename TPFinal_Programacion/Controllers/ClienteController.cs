@@ -19,13 +19,25 @@ namespace TPFinal_Programacion.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<ClienteDTO>>> Get()
         {
-            var cliente = await _context.Clientes.ToListAsync();
+            var cliente = await _context.Clientes.Include(m => m.Movimientos).ToListAsync();
 
             var clienteDto = cliente.Select(c => new ClienteDTO
             {
                 Id = c.Id,
                 Nombre = c.Nombre,
-                Email = c.Email
+                Email = c.Email,
+                Movimientos = c.Movimientos
+                .Where(x => x.ClienteId == c.Id)
+                .Select(m => new MovimientoDTO
+                {
+                    Id = m.Id,
+                    CryptoCode = m.CryptoCode,
+                    Action = m.Action,
+                    CryptoAmount = m.CryptoAmount,
+                    Pesos = m.Pesos,
+                    DateTime = m.DateTime
+                }).ToList()
+                
             }).ToList();
 
             return Ok(clienteDto);
@@ -40,15 +52,25 @@ namespace TPFinal_Programacion.Controllers
         [HttpGet("{id}")]
         public async Task<ActionResult<ClienteDTO>> Get(int id)
         {
-            var cliente = await _context.Clientes.FirstOrDefaultAsync(c => c.Id == id);
-
+            var cliente = await _context.Clientes.Include(m => m.Movimientos).FirstOrDefaultAsync(m => m.Id == id);  
             if (cliente == null)
                 return BadRequest();
             var dto = new ClienteDTO
             {
                 Id = cliente.Id,
                 Nombre = cliente.Nombre,
-                Email = cliente.Email
+                Email = cliente.Email,
+                Movimientos = cliente.Movimientos
+                .Where(x =>  x.ClienteId == id)
+                .Select(m => new MovimientoDTO
+                {
+                    Id = m.Id,
+                    CryptoCode = m.CryptoCode,
+                    Action = m.Action,
+                    CryptoAmount = m.CryptoAmount,
+                    Pesos = m.Pesos,
+                    DateTime = m.DateTime
+                }).ToList()
             };
 
             return Ok(dto);

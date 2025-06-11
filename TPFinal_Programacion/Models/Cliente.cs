@@ -11,5 +11,6 @@ namespace TPFinal_Programacion.Models
         [Required(ErrorMessage = "ERROR - Ingrese un email válido")]
         [EmailAddress(ErrorMessage = "ERROR - El formato del email es inválido")]
         public string Email { get; set; }
+        public List<Movimiento>? Movimientos { get; set; }
     }
 }
