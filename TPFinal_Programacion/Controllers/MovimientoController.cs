@@ -50,6 +50,24 @@ namespace TPFinal_Programacion.Controllers
 
             decimal totalEnPesos = askValue * dto.CryptoAmount;
 
+            if (dto.Action.ToLower() == "sale")
+            {
+                var totalComprado = await _context.Movimientos
+                    .Where(m => m.ClienteId == dto.ClienteId && m.CryptoCode.ToLower() == dto.CryptoCode.ToLower() && m.Action.ToLower() == "purchase")
+                    .SumAsync(m => m.CryptoAmount);
+                
+                var totalVendido = await _context.Movimientos
+                    .Where(m => m.ClienteId == dto.ClienteId && m.CryptoCode.ToLower() == dto.CryptoCode.ToLower() && m.Action.ToLower() == "sale")
+                    .SumAsync (m => m.CryptoAmount);
+
+                var saldoDisponible = totalComprado - totalVendido;
+
+                if (dto.CryptoAmount > saldoDisponible)
+                {
+                    return BadRequest($"No tenes suficiente saldo de {dto.CryptoCode}. Saldo disponible: {saldoDisponible}");
+                }
+            }
+
             var movimiento = new Movimiento
             {
                 CryptoCode = dto.CryptoCode,
